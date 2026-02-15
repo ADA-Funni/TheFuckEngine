@@ -54,7 +54,7 @@ class SongData {
 		for (section in legacy.data.song.notes)
 		{
 			for (note in section.sectionNotes) { 
-                if (note.lane < 4) {
+                if (section.mustHitSection ? (note.lane > 3) : (note.lane < 4)) {
                     // Opponent
                     data[0].push({t: note.time, d: note.lane % Constants.NOTE_COUNT, l: note.length, k: note.type});
                 } else {
