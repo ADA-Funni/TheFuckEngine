@@ -2,6 +2,7 @@ package funkin.data.song;
 
 import flixel.FlxG;
 import moonchart.formats.fnf.FNFVSlice;
+import moonchart.formats.fnf.legacy.FNFLegacy;
 import openfl.Assets;
 import openfl.media.Sound;
 
@@ -32,9 +33,42 @@ class SongData {
     }
 
     public function new(id:String, difficulty:String = "hard", variation:String = "") {
-        // Please grid snap all notes to this variable!
-        // It makes using directions a hell of a lot easier.
+        if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/$id-chart${suffix(variation)}.json')) initVSlice(id, difficulty, variation);
+        else {
+            initLegacy(id, difficulty, variation);
+        }
+    }
 
+    function initLegacy(id:String, difficulty:String, variation:String) {
+        var legacy = new FNFLegacy().fromFile('assets/songs/$id/$id${suffix(difficulty)}${suffix(variation)}.json');
+
+        instrumental = Assets.getSound('assets/songs/$id/Inst${suffix(variation)}.${Constants.SOUND_EXT}');
+
+        if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}')) {
+            playerVoices.push(Assets.getSound('assets/songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}'));
+            opponentVoices.push(Assets.getSound('assets/songs/$id/Voices-Opponent${suffix(variation)}.${Constants.SOUND_EXT}'));
+        } else if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}')) {
+            playerVoices.push(Assets.getSound('assets/songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}'));
+        }
+
+		for (section in legacy.data.song.notes)
+		{
+			for (note in section.sectionNotes) { 
+                if (note.lane < 4) {
+                    // Opponent
+                    data[0].push({t: note.time, d: note.lane % Constants.NOTE_COUNT, l: note.length, k: note.type});
+                } else {
+                    // Player
+                    data[1].push({t: note.time, d: note.lane % Constants.NOTE_COUNT, l: note.length, k: note.type});
+                }
+            }
+		}
+
+        speed = legacy.data.song.speed;
+        bpm = legacy.data.song.bpm; // TO-DO: Change this later!
+    }
+
+    function initVSlice(id:String, difficulty:String, variation:String) {
         var vslice = new FNFVSlice().fromFile('assets/songs/$id/$id-chart${suffix(variation)}.json', 'assets/songs/$id/$id-metadata${suffix(variation)}.json');
 
         instrumental = Assets.getSound('assets/songs/$id/Inst${suffix(vslice.meta.playData.characters.instrumental)}.${Constants.SOUND_EXT}');

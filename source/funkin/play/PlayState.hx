@@ -89,7 +89,7 @@ class PlayState extends FunkinState
 
 	function loadSong()
 	{
-		songData = new SongData("bopeebo");
+		songData = new SongData("not-spelling-that");
 		
 		inst.loadEmbedded(songData.instrumental);
 
