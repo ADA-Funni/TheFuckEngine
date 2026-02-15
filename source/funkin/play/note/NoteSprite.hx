@@ -32,6 +32,9 @@ class NoteSprite extends FlxSprite
             animation.add('note$direction', [direction + Constants.NOTE_COUNT * 3], 10);
 
         set_direction(direction);
+
+        // Might optimise the game a 'lil.
+        active = false;
     }
 
     override public function revive()

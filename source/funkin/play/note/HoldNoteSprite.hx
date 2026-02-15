@@ -55,6 +55,9 @@ class HoldNoteSprite extends FlxStrip
         graphicHeight = graphic.height;
 
         //alpha = 0.6; // Dude, no, turn that into a setting, please...
+        
+        // Might optimise the game a 'lil.
+        active = false;
     }
 
     public function redraw()

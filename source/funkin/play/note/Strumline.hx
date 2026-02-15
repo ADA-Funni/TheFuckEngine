@@ -58,19 +58,14 @@ class Strumline extends FlxGroup
         positionStrums();
     }
 
-    public function process(isPlayer:Bool)
-    {
-        this.isPlayer = isPlayer;
-
+    public function spawnNotes() {
         // Spawns the notes
-        while (data[0] != null)
+        while (data.length != 0)
         {
             var noteData:SongNoteData = data[0];
             var time:Float = noteData.t;
             var direction:NoteDirection = NoteDirection.fromInt(noteData.d);
             var length:Float = noteData.l;
-
-            if (getDistance(time) > FlxG.height) break;
 
             // Creates a note
             var note:NoteSprite = notes.recycle(NoteSprite);
@@ -97,10 +92,15 @@ class Strumline extends FlxGroup
 
             data.shift();
         }
+    }
+
+    public function process(isPlayer:Bool)
+    {
+        this.isPlayer = isPlayer;
 
         // Sorts the notes
         // Not doing this will mess up the input
-        notes.sort((i, note1, note2) -> return SortUtil.byTime(FlxSort.ASCENDING, note1, note2));
+        notes.members.filter(f -> f.alive).sort((note1, note2) -> return SortUtil.byTime(FlxSort.ASCENDING, note1, note2));
 
         // Note processing
         notes.forEachAlive(note -> {

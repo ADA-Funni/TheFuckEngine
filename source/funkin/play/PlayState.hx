@@ -49,8 +49,22 @@ class PlayState extends FunkinState
 		super.create();
 	}
 
+	override function draw() {
+		opponentStrumline.process(false);
+		playerStrumline.process(!Preferences.botplay);
+
+		processInput();
+
+		super.draw();
+	}
+
 	override public function update(elapsed:Float)
 	{
+		// DO NOT PAUSE THE INST, IT'LL THROW OFF THE PLAYER!
+		if (Math.abs(inst.time - (playerVoices?.time ?? opponentVoices.time)) > 24) {
+			resyncVocals();
+		}
+
 		if (loadedSong)
 		{
 			conductor.time = inst.time;
@@ -66,19 +80,9 @@ class PlayState extends FunkinState
 			}
 		}
 
-		opponentStrumline.process(false);
-		playerStrumline.process(!Preferences.botplay);
-
-		processInput();
-
 		if (FlxG.keys.justPressed.R) FlxG.resetState();
 
 		super.update(elapsed);
-
-		// DO NOT PAUSE THE INST, IT'LL THROW OFF THE PLAYER!
-		if (Math.abs(inst.time - (playerVoices?.time ?? opponentVoices.time)) > 24) {
-			resyncVocals();
-		}
 	}
 
 	override function destroy() {
@@ -89,7 +93,7 @@ class PlayState extends FunkinState
 
 	function loadSong()
 	{
-		songData = new SongData("not-spelling-that");
+		songData = new SongData("starter-pack");
 		
 		inst.loadEmbedded(songData.instrumental);
 
@@ -108,9 +112,11 @@ class PlayState extends FunkinState
 
 		playerStrumline.speed = songData.speed;
 		playerStrumline.data = songData.data[1];
+		playerStrumline.spawnNotes();
 
 		opponentStrumline.data = songData.data[0];
 		opponentStrumline.speed = songData.speed;
+		opponentStrumline.spawnNotes();
 	}
 
 	function startSong() {
