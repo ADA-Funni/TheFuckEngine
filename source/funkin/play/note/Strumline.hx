@@ -68,7 +68,8 @@ class Strumline extends FlxGroup
             var length:Float = noteData.l;
 
             // Creates a note
-            var note:NoteSprite = notes.recycle(NoteSprite);
+            var note:NoteSprite = new NoteSprite();
+            notes.add(note);
 
             note.time = time;
             note.direction = direction;
@@ -77,7 +78,8 @@ class Strumline extends FlxGroup
             // This gives some room for hold lengths because psych might go stupid on us when we parse charts from it!
             if (length > 25)
             {
-                var holdNote:HoldNoteSprite = holdNotes.recycle(HoldNoteSprite);
+                var holdNote:HoldNoteSprite = new HoldNoteSprite();
+                holdNotes.add(holdNote);
 
                 holdNote.time = time;
                 holdNote.direction = direction;
