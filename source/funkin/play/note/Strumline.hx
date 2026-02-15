@@ -100,7 +100,7 @@ class Strumline extends FlxGroup
 
         // Sorts the notes
         // Not doing this will mess up the input
-        notes.members.filter(f -> f.alive).sort((note1, note2) -> return SortUtil.byTime(FlxSort.ASCENDING, note1, note2));
+        notes.sort((i, note1, note2) -> return SortUtil.byTime(FlxSort.ASCENDING, note1, note2));
 
         // Note processing
         notes.forEachAlive(note -> {
