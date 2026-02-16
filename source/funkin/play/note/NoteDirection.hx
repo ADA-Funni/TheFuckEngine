@@ -34,10 +34,10 @@ enum abstract NoteDirection(Int) to Int from Int
 
 		return switch (abstract)
 		{
-			case LEFT: controls.NOTE_LEFT;
-			case DOWN: controls.NOTE_DOWN;
-			case UP: controls.NOTE_UP;
-			case RIGHT: controls.NOTE_RIGHT;
+			case LEFT: controls.note_left.pressed;
+			case DOWN: controls.note_down.pressed;
+			case UP: controls.note_up.pressed;
+			case RIGHT: controls.note_right.pressed;
 		}
 	}
 
@@ -47,10 +47,10 @@ enum abstract NoteDirection(Int) to Int from Int
 
 		return switch (abstract)
 		{
-			case LEFT: controls.NOTE_LEFT_P;
-			case DOWN: controls.NOTE_DOWN_P;
-			case UP: controls.NOTE_UP_P;
-			case RIGHT: controls.NOTE_RIGHT_P;
+			case LEFT: controls.note_left.justPressed;
+			case DOWN: controls.note_down.justPressed;
+			case UP: controls.note_up.justPressed;
+			case RIGHT: controls.note_right.justPressed;
 		}
 	}
 }

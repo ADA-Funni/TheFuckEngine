@@ -1,9 +1,12 @@
 package;
 
 import flixel.FlxGame;
+import flixel.FlxSprite;
 import flixel.util.typeLimit.NextState.InitialState;
+import funkin.Paths;
+import funkin.play.PlayState;
+import funkin.ui.FPSCounter;
 import lime.app.Application;
-import openfl.display.FPS;
 import openfl.display.Sprite;
 
 /**
@@ -11,13 +14,13 @@ import openfl.display.Sprite;
  */
 class Main extends Sprite
 {
-	#if !debug
-	public static var fpsCounter:FPS;
-	#end
+	public static var fpsCounter:FPSCounter;
 
 	public function new()
 	{
 		super();
+
+		Paths.init();
 
 		// Starts the game
 		final gameWidth:Int = 0;
@@ -29,11 +32,8 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
 
-		// There's an FPS counter in the debug menu, use that instead.
-		#if !debug
 		// Adds an FPS counter
-		fpsCounter = new FPS(10, 10, 0xFFFFFF);
+		fpsCounter = new FPSCounter(10, 10, 0xFFFFFF);
 		addChild(fpsCounter);
-		#end
 	}
 }

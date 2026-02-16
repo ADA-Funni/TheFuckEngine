@@ -33,22 +33,22 @@ class SongData {
     }
 
     public function new(id:String, difficulty:String = "hard", variation:String = "") {
-        if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/$id-chart${suffix(variation)}.json')) initVSlice(id, difficulty, variation);
+        if (Assets.exists(Paths.path('songs/$id/$id-chart${suffix(variation)}.json', 'preload'))) initVSlice(id, difficulty, variation);
         else {
             initLegacy(id, difficulty, variation);
         }
     }
 
     function initLegacy(id:String, difficulty:String, variation:String) {
-        var legacy = new FNFLegacy().fromFile('assets/songs/$id/$id${suffix(difficulty)}${suffix(variation)}.json');
+        var legacy = new FNFLegacy().fromJson(Assets.getText(Paths.path('songs/$id/$id${suffix(difficulty)}${suffix(variation)}.json', 'preload')));
 
-        instrumental = Assets.getSound('assets/songs/$id/Inst${suffix(variation)}.${Constants.SOUND_EXT}');
+        instrumental = Assets.getSound(Paths.path('songs/$id/Inst${suffix(variation)}.${Constants.SOUND_EXT}', 'preload'));
 
-        if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}')) {
-            playerVoices.push(Assets.getSound('assets/songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}'));
-            opponentVoices.push(Assets.getSound('assets/songs/$id/Voices-Opponent${suffix(variation)}.${Constants.SOUND_EXT}'));
-        } else if (#if sys sys.FileSystem #else Assets #end.exists('assets/songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}')) {
-            playerVoices.push(Assets.getSound('assets/songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}'));
+        if (Assets.exists(Paths.path('songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}', 'preload'))) {
+            playerVoices.push(Assets.getSound(Paths.path('songs/$id/Voices-Player${suffix(variation)}.${Constants.SOUND_EXT}', 'preload')));
+            opponentVoices.push(Assets.getSound(Paths.path('songs/$id/Voices-Opponent${suffix(variation)}.${Constants.SOUND_EXT}', 'preload')));
+        } else if (Assets.exists(Paths.path('songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}', 'preload'))) {
+            playerVoices.push(Assets.getSound(Paths.path('songs/$id/Voices${suffix(variation)}.${Constants.SOUND_EXT}', 'preload')));
         }
 
 		for (section in legacy.data.song.notes)
@@ -69,15 +69,15 @@ class SongData {
     }
 
     function initVSlice(id:String, difficulty:String, variation:String) {
-        var vslice = new FNFVSlice().fromFile('assets/songs/$id/$id-chart${suffix(variation)}.json', 'assets/songs/$id/$id-metadata${suffix(variation)}.json');
+        var vslice = new FNFVSlice().fromJson(Assets.getText(Paths.path('songs/$id/$id-chart${suffix(variation)}.json', 'preload')), Assets.getText(Paths.path('songs/$id/$id-metadata${suffix(variation)}.json', 'preload')));
 
-        instrumental = Assets.getSound('assets/songs/$id/Inst${suffix(vslice.meta.playData.characters.instrumental)}.${Constants.SOUND_EXT}');
+        instrumental = Assets.getSound(Paths.path('songs/$id/Inst${suffix(vslice.meta.playData.characters.instrumental)}.${Constants.SOUND_EXT}', 'preload'));
 
         for (variant in vslice.meta.playData.characters.playerVocals ?? [vslice.meta.playData.characters.player])
-            playerVoices.push(Assets.getSound('assets/songs/$id/Voices${suffix(variant)}${suffix(variation)}.${Constants.SOUND_EXT}'));
+            playerVoices.push(Assets.getSound(Paths.path('songs/$id/Voices${suffix(variant)}${suffix(variation)}.${Constants.SOUND_EXT}', 'preload')));
 
         for (variant in vslice.meta.playData.characters.opponentVocals ?? [vslice.meta.playData.characters.opponent])
-            opponentVoices.push(Assets.getSound('assets/songs/$id/Voices${suffix(variant)}${suffix(variation)}.${Constants.SOUND_EXT}'));
+            opponentVoices.push(Assets.getSound(Paths.path('songs/$id/Voices${suffix(variant)}${suffix(variation)}.${Constants.SOUND_EXT}', 'preload')));
 
 		for (note in vslice.data.notes.get(difficulty))
 		{

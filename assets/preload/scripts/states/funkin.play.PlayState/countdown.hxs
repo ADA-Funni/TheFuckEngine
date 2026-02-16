@@ -1,0 +1,20 @@
+import funkin.Paths;
+import flixel.FlxG;
+
+function onBeatHit(curBeat:Int) {
+	if (curBeat > 0) return;
+
+	switch(curBeat) {
+		case -4:
+			FlxG.sound.play(Paths.sound('sounds/introTHREE'));
+
+		case -3:
+			FlxG.sound.play(Paths.sound('sounds/introTWO'));
+
+		case -2:
+			FlxG.sound.play(Paths.sound('sounds/introONE'));
+
+		case -1:
+			FlxG.sound.play(Paths.sound('sounds/introGO'));
+	}
+}

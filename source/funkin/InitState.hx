@@ -22,7 +22,7 @@ class InitState extends FlxState
         Controls.instance = new Controls();
 
         // Starts the game
-        FlxG.switchState(() -> new funkin.play.PlayState());
+        FlxG.switchState(() -> new funkin.ui.mainmenu.MainMenuState());
 
         super.create();
     }

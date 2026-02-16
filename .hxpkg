@@ -18,6 +18,18 @@
 				"name": "moonchart",
 				"link": "https://github.com/MaybeMaru/moonchart",
 				"branch": "main"
+			},
+			{
+				"name": "hxcpp-debug-server"
+			},
+			{
+				"name": "hscript-iris"
+			},
+			{
+				"name": "flixel-addons"
+			},
+			{
+				"name": "flixel-ui"
 			}
 		]
 	}

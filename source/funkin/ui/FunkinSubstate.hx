@@ -1,14 +1,14 @@
 package funkin.ui;
 
-import flixel.FlxState;
+import flixel.FlxSubState;
 import funkin.input.Controls;
 import funkin.script.HScript;
 import openfl.Assets;
 
 /**
- * A class used as the base for all the game's states.
+ * A class used as the base for all the game's substates.
  */
-class FunkinState extends FlxState
+class FunkinSubstate extends FlxSubState
 {
     var scripts:Array<HScript> = [];
     var conductor(get, never):Conductor;
@@ -16,7 +16,7 @@ class FunkinState extends FlxState
 
     public function new()
     {
-        super();
+        super(0x00000000);
 
         // Adds conductor callbacks
         conductor.stepHit.add(stepHit);
@@ -25,7 +25,7 @@ class FunkinState extends FlxState
     }
 
     public override function create() {
-        for (file in Paths.readScripts('scripts/states/${Type.getClassName(Type.getClass(this))}', 'preload')) {
+        for (file in Paths.readScripts('scripts/substates/${Type.getClassName(Type.getClass(this))}', 'preload')) {
 			var script = new HScript(Assets.getText(Paths.path(file, 'preload')));
 			scripts.push(script);
 		}

@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' WTF Engine" file="WTFEngine" main="Main" version="0.1.0" company="VirtuGuy" />
+	<app title="Friday Night Funkin': Nine-Slice Engine" file="Funkin9Slice" main="Main" version="0.1.0" company="VirtuGuy" />
 
 	<app preloader="flixel.system.FlxPreloader" />
 
@@ -23,19 +23,33 @@
 	<set name="BUILD_DIR" value="export" />
 
 	<source path="source" />
+	
+	<set name="AUDIO_EXCLUDE" value="*.ogg" if="web"/>
+	<set name="AUDIO_EXCLUDE" value="*.mp3" unless="web"/>
 
-	<assets path="assets" exclude="*.ogg|*.aseprite" if="web" />
-	<assets path="assets" exclude="*.mp3|*.aseprite" unless="web" />
+	<assets path="assets/preload" library="preload" />
+	<library name="preload" preload="true" />
+
+	<assets path="assets/shared" library="shared" />
+	<library name="shared" preload="false" />
+
+	<assets path="mods" embed="false" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
+	<haxelib name="flixel-ui" />
+
 	<haxelib name="moonchart" />
+	<haxelib name="hscript-iris" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<haxedef name="FLX_NO_HEALTH" />
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+
+	<haxeflag name="-dce no" />
 
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
@@ -45,6 +59,12 @@
 	<haxedef name="message.reporting" value="pretty" />
 
 	<!-- _________________________________ Custom _______________________________ -->
+
+	<!-- Macro code stolen from https://github.com/FunkinCrew/Funkin -->
+	<haxeflag name="--macro" value="addMetadata('@:build(funkin.util.macro.FlxMacro.buildFlxBasic())', 'flixel.FlxBasic')" />
+	<haxeflag name="--macro" value="addMetadata('@:build(funkin.util.macro.FlxMacro.buildFlxBasic())', 'flixel.FlxBasic.IFlxBasic')" />
+	
+	<haxeflag name="--macro" value="addMetadata('@:build(funkin.util.macro.FlxMacro.buildFlxSprite())', 'flixel.FlxSprite')" />
 
 	<!--Place custom nodes like icons here-->
 </project>

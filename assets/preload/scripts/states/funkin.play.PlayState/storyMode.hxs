@@ -1,0 +1,37 @@
+import flixel.FlxG;
+
+var currentSong:Int = 0;
+var songs:Array<String> = ["bopeebo", "fresh", "dadbattle"]; // Replace this with StoryMenuState.selectedLevel or smth
+var funkin:Funkin;
+
+function playCurrentSong() {
+	funkin = Funkin.quickLoad(songs[currentSong], 'hard', 'pico', game, null);
+	funkin.onFinish = () -> {
+		playNextSong();
+	};
+	funkin.startCountdown();
+}
+
+function playNextSong() {
+	// Note to self: (int++;) doesn't work in HScript Iris!
+	currentSong += 1;
+
+	funkin?.destroy();
+
+	if (currentSong == songs.length) {
+		FlxG.resetState();
+		return;
+	}
+	playCurrentSong();
+}
+
+// ------------ Events ------------
+
+function onCreate() {
+    playCurrentSong();
+}
+
+function onUpdate(elapsed:Float) {
+	if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.N) 
+        playNextSong();
+}

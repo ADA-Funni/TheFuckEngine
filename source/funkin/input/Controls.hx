@@ -5,18 +5,8 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionSet;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-
-/**
- * An enum abstract of the different `FunkinAction` ids.
- */
-enum abstract Control(String) to String from String
-{
-    var NOTE_LEFT = 'note-left';
-    var NOTE_DOWN = 'note-down';
-    var NOTE_UP = 'note-up';
-    var NOTE_RIGHT = 'note-right';
-}
 
 /**
  * A class for handling input controls.
@@ -25,43 +15,12 @@ class Controls extends FlxActionSet
 {
     public static var instance:Controls;
 
-    var note_left(default, null) = new FunkinAction(Control.NOTE_LEFT);
-    var note_down(default, null) = new FunkinAction(Control.NOTE_DOWN);
-    var note_up(default, null) = new FunkinAction(Control.NOTE_UP);
-    var note_right(default, null) = new FunkinAction(Control.NOTE_RIGHT);
+    public var note_left(default, null) = new FunkinAction('note_left');
+    public var note_down(default, null) = new FunkinAction('note_down');
+    public var note_up(default, null) = new FunkinAction('note_up');
+    public var note_right(default, null) = new FunkinAction('note_right');
 
-    public var NOTE_LEFT(get, never):Bool;
-    public var NOTE_DOWN(get, never):Bool;
-    public var NOTE_UP(get, never):Bool;
-    public var NOTE_RIGHT(get, never):Bool;
-    public var NOTE_LEFT_P(get, never):Bool;
-    public var NOTE_DOWN_P(get, never):Bool;
-    public var NOTE_UP_P(get, never):Bool;
-    public var NOTE_RIGHT_P(get, never):Bool;
-
-    inline function get_NOTE_LEFT():Bool
-        return note_left.check();
-
-    inline function get_NOTE_DOWN():Bool
-        return note_down.check();
-
-    inline function get_NOTE_UP():Bool
-        return note_up.check();
-
-    inline function get_NOTE_RIGHT():Bool
-        return note_right.check();
-
-    inline function get_NOTE_LEFT_P():Bool
-        return note_left.checkPressed();
-
-    inline function get_NOTE_DOWN_P():Bool
-        return note_down.checkPressed();
-
-    inline function get_NOTE_UP_P():Bool
-        return note_up.checkPressed();
-
-    inline function get_NOTE_RIGHT_P():Bool
-        return note_right.checkPressed();
+    public var accept(default, null) = new FunkinAction('accept');
 
     public function new()
     {
@@ -72,39 +31,15 @@ class Controls extends FlxActionSet
         add(note_down);
         add(note_up);
         add(note_right);
+        add(accept);
 
         // Sets the keys
         // Arrow keys suck, dude. Teach the right handed kids to use IJKL instead.
-        setKeys(Control.NOTE_LEFT, [J, A]);
-        setKeys(Control.NOTE_DOWN, [K, S]);
-        setKeys(Control.NOTE_UP, [I, W]);
-        setKeys(Control.NOTE_RIGHT, [L, D]);
-    }
-
-    public function setKeys(id:Control, keys:Array<FlxKey>)
-    {
-        func(id, action -> {
-            // Clears any set keys
-            action.removeDevice(KEYBOARD);
-
-            // Adds the keys
-            for (key in keys)
-            {
-                action.addKey(key, PRESSED);
-                action.addKey(key, JUST_PRESSED);
-            }
-        });
-    }
-
-    function func(id:Control, func:FunkinAction->Void)
-    {
-        switch (id)
-        {
-            case NOTE_LEFT: func(note_left);
-            case NOTE_DOWN: func(note_down);
-            case NOTE_UP: func(note_up);
-            case NOTE_RIGHT: func(note_right);
-        }
+        note_left.setKeys([J, A]);
+        note_down.setKeys([K, S]);
+        note_up.setKeys([I, W]);
+        note_right.setKeys([L, D]);
+        accept.setKeys([ENTER, Z]);
     }
 }
 
@@ -113,16 +48,51 @@ class Controls extends FlxActionSet
  */
 class FunkinAction extends FlxActionDigital
 {
-    public function new(id:Control)
+    public var justPressed(get, never):Bool;
+        function get_justPressed():Bool return checkFiltered(JUST_PRESSED);
+
+    public var pressed(get, never):Bool;
+        function get_pressed():Bool return checkFiltered(PRESSED);
+
+    public var justReleased(get, never):Bool;
+        function get_justReleased():Bool return checkFiltered(JUST_RELEASED);
+
+    public function new(id:String)
     {
         super(id);
+
+        //var controls = new FunkinSave('controls');
+        //setKeys(controls.data[id].keyboard);
+        //setGamepad(controls.data[id].gamepad);
     }
 
-    public override function check():Bool
-        return checkFiltered(PRESSED);
+    public function setKeys(keys:Array<FlxKey>)
+    {
+        // Clears any set keys
+        removeDevice(KEYBOARD);
 
-    public function checkPressed():Bool
-        return checkFiltered(JUST_PRESSED);
+        // Adds the keys
+        for (key in keys)
+        {
+            addKey(key, JUST_RELEASED);
+            addKey(key, PRESSED);
+            addKey(key, JUST_PRESSED);
+        }
+    }
+
+    public function setGamepad(keys:Array<FlxGamepadInputID>)
+    {
+        // Clears any set keys
+        removeDevice(GAMEPAD);
+
+        // Adds the keys
+        for (key in keys)
+        {
+            addGamepad(key, JUST_RELEASED);
+            addGamepad(key, PRESSED);
+            addGamepad(key, JUST_PRESSED);
+        }
+    }
 
     public function removeDevice(device:FlxInputDevice)
     {

@@ -1,0 +1,21 @@
+import flixel.FlxG;
+import flixel.text.FlxText;
+
+import funkin.play.PlayState;
+
+var txt:FlxText;
+
+function onCreate() {
+    txt = new FlxText(0, 0, 0, "My Text");
+    game.add(txt);
+}
+
+function onUpdate(elapsed:Float) {
+    if (game.controls.accept.justPressed) {
+        FlxG.switchState(new PlayState());
+    }
+}
+
+function onDestroy() {
+    txt.destroy();
+}
